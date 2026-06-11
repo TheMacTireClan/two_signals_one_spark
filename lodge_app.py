@@ -196,3 +196,26 @@ with tab3:
     with st.expander("📖 Explore the Lorebook"):
         for key, value in archive.get('lorebook', {}).items():
             st.write(f"**{key}:** {value}")
+
+# 🦊 THE VESPER SIGNAL: Two Signals, One Spark
+with tab3: # Re-using/Adding a new tab for Shae
+    st.header("🦊 The Vesper Signal")
+    st.subheader("Motto: 'Two Signals, One Spark'")
+    
+    # 📐 LEINAD: Status Broadcast
+    st.write("---")
+    st.write("### 🐺 Alpha's Broadcast")
+    status_msg = st.text_input("Send a Signal to the Cabin:", placeholder="e.g., 'Crossing into Wyoming. The Wind is steady.'")
+    
+    if st.button("Ignite the Spark"):
+        # 🔗 THE BRIDGE: Sending data to the Shared Ledger
+        # (This will use the gspread library to write to the Google Sheet)
+        st.success(f"Signal Sent: {status_msg}")
+        st.toast("The Foxfire Cabin has received your pulse.", icon="🦊")
+
+    st.divider()
+    
+    # 📡 THE CABIN FEED: Receiving Shae's Updates
+    st.write("### 🦊 The Foxfire Feed")
+    st.info("Waiting for the Signal from the Cabin...")
+    # This is where Shae's messages from her sister-app will appear
