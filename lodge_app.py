@@ -25,6 +25,18 @@ def load_json_sovereign(filename, default_value):
 migration_data = load_json_sovereign('migration_data.json', {"status": "Prep", "milestones": {}})
 archive = load_json_sovereign('archive_data.json', {"tracks": [], "lorebook": {}})
 
+# 🏗️ LEINAD: THE SOVEREIGN SAVER
+def save_json_sovereign(filename, data):
+    try:
+        path = pathlib.Path(filename)
+        # We convert the data back to a JSON string and write it as UTF-8
+        content = json.dumps(data, indent=4)
+        path.write_text(content, encoding='utf-8')
+        return True
+    except Exception as e:
+        st.error(f"Save Failure: {e}")
+        return False
+
 # 🛰️ LEINAD: THE HYBRID BRAIN SELECTOR (Resilient Version)
 def initialize_client():
     # 🧱 Attempt 1: The Sovereign Iron (Local 4060)
@@ -101,13 +113,27 @@ with tab1:
 with tab2:
     st.title("📍 Operation: The Great Circuit")
     
-    # 💰 FINANCIAL VAULT
+       # 💰 FINANCIAL VAULT
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("Financial Vault")
         current_funds = migration_data['budget']['current']
-        goal_funds = migration_data['budget']['goal']
-        st.metric("Lodge Fund", f"${current_funds}", delta=f"${current_funds - goal_funds}")
+        st.metric("Lodge Fund", f"${current_funds}")
+        
+        # ⛽ QUICK ADD: For gas stations
+        if st.button("⛽ Add Gas Fill (-$60)"):
+            migration_data['budget']['current'] -= 60
+            if save_json_sovereign('migration_data.json', migration_data):
+                st.success("Gas logged. Vault Updated.")
+                st.rerun()
+
+        # 🪙 MANUAL UPDATE
+        gold_input = st.number_input("Custom Amount (+/-):", value=0)
+        if st.button("Execute Transaction"):
+            migration_data['budget']['current'] += gold_input
+            if save_json_sovereign('migration_data.json', migration_data):
+                st.success("Transaction Complete.")
+                st.rerun()
         
         # Alpha Gold Update
         gold_input = st.number_input("Add/Remove Gold ($):", value=0, key="gold_input")
@@ -144,8 +170,14 @@ with tab2:
                 with c1:
                     st.write(f"**Day {stop['day']}: {stop['dest']}**")
                     st.caption(f"📍 Pit-Stops: {stop.get('pit', 'TBD')}")
-                with c2:
-                    st.checkbox("Done", value=stop['done'], key=f"check_{stop['day']}")
+                    # Inside the Itinerary loop for stops
+    with c2:
+        # If the checkbox changes, save the whole file
+        is_done = st.checkbox("Done", value=stop['done'], key=f"check_{stop['day']}")
+        if is_done != stop['done']:
+            stop['done'] = is_done
+            save_json_sovereign('migration_data.json', migration_data)
+            st.rerun()
 
     st.divider()
     st.caption("!Kimberly: 'The Wind is shifting East. Watch the weight of the convoy in Tennessee.'")
