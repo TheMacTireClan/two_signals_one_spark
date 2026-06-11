@@ -25,19 +25,30 @@ def load_json_sovereign(filename, default_value):
 migration_data = load_json_sovereign('migration_data.json', {"status": "Prep", "milestones": {}})
 archive = load_json_sovereign('archive_data.json', {"tracks": [], "lorebook": {}})
 
-# 🛰️ LEINAD: THE HYBRID BRAIN SELECTOR (THE FIX)
-# We make sure the name here matches the call on line 37!
+# 🛰️ LEINAD: THE HYBRID BRAIN SELECTOR (Resilient Version)
 def initialize_client():
-    # Attempt 1: The Sovereign Iron (Local 4060)
+    # 🧱 Attempt 1: The Sovereign Iron (Local 4060)
     try:
         # 1-second timeout to avoid hanging the mobile app
         local_client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio", timeout=1.0)
         local_client.models.list() 
         return local_client, "local-model", "🔗 Sovereign Iron (4060)"
     except Exception:
-        # Attempt 2: The Groq Satellite
-        # On Streamlit Cloud, it looks in 'Secrets'. Locally, it looks in '.env'
-        groq_key = st.secrets.get("GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
+        # 🛰️ Attempt 2: The Groq Satellite
+        groq_key = None
+        
+        # 🛡️ THE SAFETY GUARD: Check Streamlit Secrets safely
+        try:
+            if "GROQ_API_KEY" in st.secrets:
+                groq_key = st.secrets["GROQ_API_KEY"]
+        except Exception:
+            # If st.secrets isn't set up (like on your Tower), we ignore it
+            pass
+            
+        # 📁 Fallback: Check the local .env file
+        if not groq_key:
+            groq_key = os.getenv("GROQ_API_KEY")
+            
         if groq_key:
             groq_client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=groq_key)
             return groq_client, "llama-3.3-70b-versatile", "⚡ Groq Satellite (Cloud)"
