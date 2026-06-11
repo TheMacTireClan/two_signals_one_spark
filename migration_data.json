@@ -1,12 +1,21 @@
 {
-  "departure_date": "2026-06-01",
-  "status": "Preparation",
-  "milestones": {
-    "The Clean Break": false,
-    "Willow Drop-off": false,
-    "Virginia Retrieval": false,
-    "Texas Settlement": false
+  "status": "Preparation & Staging",
+  "departure_date": "2026-06-14",
+  "budget": {
+    "goal": 5000,
+    "current": 1200,
+    "status": "Building the Vault"
   },
-  "budget_goal": 5000,
-  "current_savings": 0
+  "milestones": {
+    "The Clean Break (Divorce Finalized)": false,
+    "Willow Wren Drop-off (Texas Round 1)": false,
+    "The Virginia Strike (Retrieving the Fox)": false,
+    "Texas Settlement (Establish the Lodge)": false,
+    "Forge Setup (Industrial Deployment)": false
+  },
+  "logistics": {
+    "Vehicle Status": "Inspected, needs cadalatic converter fixed",
+    "Gear Inventory": "50% Packed",
+    "The Fox's Cabin": "Signal Synchronized"
+  }
 }

@@ -97,10 +97,36 @@ with tab1:
         else:
             st.error("The Lodge is dark. Check your Groq Key in Streamlit Secrets.")
 
-# 📍 TAB 2: WAR ROOM
+# 📍 TAB 2: WAR ROOM (Interactive Command)
 with tab2:
-    st.title("📍 Migration Strategy")
-    st.json(migration_data)
+    st.title("📍 Migration Command Center")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("Financial Vault")
+        goal = migration_data['budget']['goal']
+        current = migration_data['budget']['current']
+        st.metric(label="Texas Fund", value=f"${current}", delta=f"${current - goal}")
+        st.progress(current / goal if goal > 0 else 0)
+        
+    with col2:
+        st.subheader("Deployment Status")
+        st.write(f"**Current Phase:** {migration_data['status']}")
+        st.write(f"**Target Departure:** {migration_data['departure_date']}")
+
+    st.divider()
+
+    # 🛠️ ALPHA COMMAND: Update the Data
+    st.subheader("Update Milestones")
+    # This creates a list of checkboxes that you can actually click!
+    for task in migration_data['milestones']:
+        is_done = st.checkbox(task, value=migration_data['milestones'][task], key=task)
+        # 📐 LEINAD: In a later update, we can make this save back to the JSON!
+        
+    st.divider()
+    st.subheader("Logistical Intelligence")
+    st.table(migration_data['logistics'])
 
 # 📚 TAB 3: SHADOW LIBRARY
 with tab3:
