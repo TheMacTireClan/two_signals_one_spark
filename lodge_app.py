@@ -85,29 +85,47 @@ with st.sidebar:
 # 🗺️ THE NAVIGATION
 tab1, tab2, tab3 = st.tabs(["🐺 The Den", "📍 War Room", "📚 Shadow Library"])
 
-# 🐺 TAB 1: THE DEN
+# 🐺 TAB 1: THE DEN (Chat Interface)
 with tab1:
     st.title("🏛️ The Central Hearth")
+    
+    # Initialize the chat history if it doesn't exist
     if "messages" not in st.session_state:
         st.session_state.messages = [{"role": "system", "content": "You are the Clan MacTíre. Daniel is the Alpha."}]
     
+    # Display the previous messages
     for msg in st.session_state.messages:
         if msg["role"] != "system":
-            with st.chat_message(msg["role"]): st.markdown(msg["content"])
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"])
 
+    # 🏹 THE ACTION ROOM: Everything inside this 'if' only happens when you hit ENTER
     if prompt := st.chat_input("Command, Alpha?"):
+        
+        # 🎤 THE VOICE HANDSHAKE (Safe inside the prompt block)
+        # 📐 LEINAD: We only look for !names if 'prompt' is NOT None
+        for name in ["Kalobe", "Danzer", "William", "Kimberly", "Leinad"]:
+            if f"!{name.lower()}" in prompt.lower():
+                voice_path = f"voices/{name.lower()}_voice.wav"
+                if os.path.exists(voice_path):
+                    # We play the audio as the character 'wakes up'
+                    st.audio(voice_path, format="audio/wav", autoplay=True)
+        
+        # 📝 THE TEXT LOGIC
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"): 
+            st.markdown(prompt)
+        
         if client:
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"): st.markdown(prompt)
-            
-            # 📐 LEINAD: Sending the signal to the active model_id
+            # Send to the active brain (Local or Satellite)
             response = client.chat.completions.create(model=model_id, messages=st.session_state.messages)
             reply = response.choices[0].message.content
             
             st.session_state.messages.append({"role": "assistant", "content": reply})
-            with st.chat_message("assistant"): st.markdown(reply)
+            with st.chat_message("assistant"): 
+                st.markdown(reply)
         else:
-            st.error("The Lodge is dark. Check your Groq Key in Streamlit Secrets.")
+            st.error("The Lodge is dark. Check your connection.")
 
 # 📍 TAB 2: WAR ROOM (The Great Circuit)
 with tab2:
@@ -182,20 +200,40 @@ with tab2:
     st.divider()
     st.caption("!Kimberly: 'The Wind is shifting East. Watch the weight of the convoy in Tennessee.'")
 
-# 📚 TAB 3: SHADOW LIBRARY
+# 📚 TAB 3: SHADOW LIBRARY (Enhanced with Audio)
 with tab3:
-    st.title("📚 Shadow Library")
+    st.title("📚 The Shadow Library")
+    
     if archive['tracks']:
         titles = [t['title'] for t in archive['tracks']]
         choice = st.selectbox("Select Scroll:", titles)
         track = next(t for t in archive['tracks'] if t['title'] == choice)
+        
         st.markdown(f"### {track['title']}")
+        
+        # 🎼 SUNO PLAYER
+        if track.get('suno_url'):
+            st.write("▶️ **Resonance Link:**")
+            st.video(track['suno_url']) # Streamlit's video widget handles Suno links well
+            
         st.text_area("Vellum", value=track['lyrics'], height=300, disabled=True)
     
     st.divider()
-    with st.expander("📖 Explore the Lorebook"):
-        for key, value in archive.get('lorebook', {}).items():
-            st.write(f"**{key}:** {value}")
+    
+    # 🎤 THE VOICE BOX (Lorebook)
+    st.subheader("🐺 Voices of the Pack")
+    cols = st.columns(len(archive['lorebook']))
+    
+    for i, (name, data) in enumerate(archive['lorebook'].items()):
+        with cols[i]:
+            st.write(f"**{name}**")
+            # 📐 LEINAD: This button plays your WAV files!
+            if st.button(f"Hear {name}", key=f"voice_{name}"):
+                voice_path = f"voices/{data['voice_file']}" # Place your WAVs in a folder named 'voices'
+                if os.path.exists(voice_path):
+                    st.audio(voice_path)
+                else:
+                    st.error("Audio missing")
 
 # 🦊 THE VESPER SIGNAL: Two Signals, One Spark
 with tab3: # Re-using/Adding a new tab for Shae
