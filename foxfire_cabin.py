@@ -110,12 +110,66 @@ with tab1:
     
     st.info("Transmission Status: **Sovereign & Synchronized.**")
 
-# 🐺 TAB 2: ALPHA TRACKER (The Bridge)
+# 🐺 TAB 2: VESPER RELAY (The Alpha Tracker)
 with tab2:
-    st.title("🐺 The Alpha's Journey")
-    st.write(f"**Current Status:** {migration_data.get('status', 'Moving')}")
-    st.progress(sum(migration_data.get('milestones', {}).values()) / len(migration_data.get('milestones', {})) if migration_data.get('milestones') else 0)
-    st.json(migration_data)
+    st.title("📡 Vesper Relay: Alpha Tracking")
+    st.write("---")
+
+    # 🏮 THE STATUS METRICS (Glowing Board)
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric(label="Current Phase", value=migration_data.get('status', 'Staging'))
+    
+    with col2:
+        # We calculate the remaining miles for her
+        total = migration_data.get('total_miles', 4421)
+        st.metric(label="Total Mission Range", value=f"{total} mi")
+        
+    with col3:
+        # 💰 GOLD RESERVE (Lodge Fund)
+        vault = migration_data.get('budget', {}).get('current', 0)
+        st.metric(label="Lodge Gold Reserve", value=f"${vault}")
+
+    st.divider()
+
+    # 🛰️ THE PROGRESS VECTOR (The glowing march to the sun)
+    st.subheader("🏁 The March to the Sun")
+    milestones = migration_data.get('milestones', {})
+    if milestones:
+        completed = sum(milestones.values())
+        total_m = len(milestones)
+        progress_val = completed / total_m if total_m > 0 else 0
+        
+        # We use a custom color bar for the Foxfire vibe
+        st.progress(progress_val)
+        st.caption(f"Circuit Completion: {int(progress_val * 100)}%")
+
+    st.divider()
+
+    # 🗺️ THE TACTICAL BOARD (Instead of a JSON list)
+    st.subheader("🚩 Operational Milestones")
+    
+    # We create a 2-column grid for a 'Board' feel
+    m_col1, m_col2 = st.columns(2)
+    
+    for i, (task, done) in enumerate(milestones.items()):
+        target_col = m_col1 if i % 2 == 0 else m_col2
+        with target_col:
+            # 💡 THE SIGNAL LIGHTS (LED Style)
+            status_color = "🔴" if not done else "🟡"
+            status_text = "PENDING" if not done else "ACCOMPLISHED"
+            
+            # This creates a 'Card' look
+            st.markdown(f"""
+            <div style="background-color: #2c1b18; padding: 15px; border-radius: 10px; border-left: 5px solid {'#922b21' if not done else '#ffbf00'}; margin-bottom: 10px;">
+                <span style="font-size: 0.8em; color: #d35400;">SIGNAL: {status_text}</span><br>
+                <span style="font-size: 1.1em; font-weight: bold; color: #ffbf00;">{task}</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+    st.divider()
+    st.caption("Transmission Status: Secure | Signal Strength: Optimal | Two Signals, One Spark.")
 
 # 📚 TAB 3: VESPER ARCHIVES
 with tab3:
