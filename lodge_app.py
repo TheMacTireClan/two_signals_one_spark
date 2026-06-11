@@ -9,11 +9,11 @@ from dotenv import load_dotenv
 # 🏗️ LEINAD: THE GLOBAL OVERRIDE
 os.environ["PYTHONUTF8"] = "1"
 
-# 📐 LEINAD: THE HYBRID BRAIN SELECTOR
+# 📐 LEINAD: THE HYBRID BRAIN SELECTOR (Corrected Alignment)
 def initialize_client():
     # 🧱 Attempt 1: The Sovereign Iron (Local 4060)
     try:
-        # We use a 1-second timeout so it doesn't hang if the PC is off
+        # We use a very short timeout so it doesn't hang if the PC is off
         local_client = OpenAI(
             base_url="http://localhost:1234/v1", 
             api_key="lm-studio",
@@ -22,18 +22,20 @@ def initialize_client():
         local_client.models.list() # Test connection
         return local_client, "local-model", "🔗 Sovereign Iron (4060)"
     except Exception:
-       # 🛰️ Attempt 2: The Groq Satellite (Update the model_id)
-return groq_client, "llama-3.3-70b-versatile", "⚡ Groq Satellite (Cloud)"
+        # 🛰️ Attempt 2: The Groq Satellite (Skeleton Crew)
+        # 📐 LEINAD: EVERYTHING BELOW THIS MUST BE INDENTED
+        groq_key = os.getenv("GROQ_API_KEY")
         if groq_key:
             groq_client = OpenAI(
                 base_url="https://api.groq.com/openai/v1",
                 api_key=groq_key
             )
-            # We use the powerful 70B model for the skeleton crew
-            return groq_client, "llama-3.1-70b-versatile", "⚡ Groq Satellite (Cloud)"
+            # The return must be inside this 'if' block
+            return groq_client, "llama-3.3-70b-versatile", "⚡ Groq Satellite (Cloud)"
         else:
             return None, None, "❌ Offline: No Brain Found"
 
+# 🏗️ INITIALIZE THE ACTIVE NODE
 client, model_id, brain_status = initialize_client()
 st.sidebar.caption(f"📍 Brain: {brain_status}")
 
