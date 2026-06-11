@@ -9,31 +9,29 @@ from dotenv import load_dotenv
 # 🏗️ LEINAD: THE GLOBAL OVERRIDE
 os.environ["PYTHONUTF8"] = "1"
 
-# 📐 LEINAD: THE HYBRID BRAIN SELECTOR (Corrected Alignment)
-def initialize_client():
-    # 🧱 Attempt 1: The Sovereign Iron (Local 4060)
+# 🛰️ LEINAD: THE HYBRID BRAIN SELECTOR (THE FIX)
+def initialize_brain():
     try:
-        # We use a very short timeout so it doesn't hang if the PC is off
-        local_client = OpenAI(
-            base_url="http://localhost:1234/v1", 
-            api_key="lm-studio",
-            timeout=1.0 
-        )
-        local_client.models.list() # Test connection
+        # Try Local Forge (Fast timeout)
+        local_client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio", timeout=0.5)
+        local_client.models.list() 
         return local_client, "local-model", "🔗 Sovereign Iron (4060)"
-    except Exception:
-        # 🛰️ Attempt 2: The Groq Satellite (Skeleton Crew)
-        # 📐 LEINAD: EVERYTHING BELOW THIS MUST BE INDENTED
-        groq_key = os.getenv("GROQ_API_KEY")
+    except:
+        # Fallback to Groq Satellite
+        # Check Streamlit Secrets first, then local .env
+        groq_key = st.secrets.get("GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
         if groq_key:
-            groq_client = OpenAI(
-                base_url="https://api.groq.com/openai/v1",
-                api_key=groq_key
-            )
-            # The return must be inside this 'if' block
+            groq_client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=groq_key)
             return groq_client, "llama-3.3-70b-versatile", "⚡ Groq Satellite (Cloud)"
-        else:
-            return None, None, "❌ Offline: No Brain Found"
+        return None, None, "❌ Offline"
+
+client, model_id, brain_status = initialize_brain()
+
+# ... (inside your chat input logic) ...
+if prompt := st.chat_input("Command, Alpha?"):
+    if client:
+        # Use the DYNAMIC model_id from our selector
+        response = client.chat.completions.create(model=model_id, messages=st.session_state.messages)
 
 # 🏗️ INITIALIZE THE ACTIVE NODE
 client, model_id, brain_status = initialize_client()
