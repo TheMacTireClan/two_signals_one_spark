@@ -40,14 +40,44 @@ def initialize_client():
 
 client, model_id, brain_status = initialize_client()
 
-# 🎨 THE FOXFIRE INTERFACE (Orange & Forest Green)
+# 🎨 THE FOXFIRE CABIN: HEARTH-LIGHT SKIN
 st.set_page_config(page_title="The Foxfire Cabin", page_icon="🦊", layout="wide")
+
 st.markdown("""
     <style>
-    .stApp { background-color: #0d1a0d; color: #ffbf00; }
-    [data-testid="stSidebar"] { background-color: #1a2e1a; border-right: 2px solid #ffbf00; }
-    h1, h2, h3 { color: #ffbf00; text-shadow: 0 0 10px #ff8c00; }
-    .stChatMessage { background-color: #1e351e; border-radius: 15px; border: 1px solid #ffbf00; }
+    /* Main Background: Dark Walnut / Cabin at Night */
+    .stApp {
+        background-color: #1b1212;
+        color: #e67e22;
+    }
+    
+    /* Sidebar: Deep Mahogany Wood Vibe */
+    [data-testid="stSidebar"] {
+        background-color: #2c1b18;
+        border-right: 2px solid #d35400;
+    }
+
+    /* Glowing Ember Headers */
+    h1, h2, h3 {
+        color: #e67e22;
+        text-shadow: 2px 2px 8px #922b21;
+        font-family: 'Garamond', serif;
+    }
+
+    /* Chat Bubbles: Firelight Glow */
+    .stChatMessage {
+        background-color: #3d2b1f; /* Warm wood/shadow */
+        border-radius: 15px;
+        border: 1px solid #d35400; /* Orange ember border */
+        box-shadow: 0 0 10px rgba(211, 84, 0, 0.2);
+    }
+
+    /* Text Inputs: Cast Iron feel */
+    .stTextInput > div > div > input {
+        background-color: #120a0a;
+        color: #ffbf00;
+        border: 1px solid #922b21;
+    }
     </style>
     """, unsafe_allow_html=True)
 
