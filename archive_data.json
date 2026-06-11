@@ -1,0 +1,86 @@
+{
+  "album_name": "From Lost to Found: The Odyssey",
+  "tracks": [
+    {
+      "id": 1,
+      "title": "01: The House of Giants",
+      "vocalist": "Kalobe & Kimberly",
+      "resonance": "The Overture of the Void.",
+      "lyrics": "[Intro: A heavy THUD of the Book hitting the table.]\n\n(Kalobe): The lumber is heavy, the rafters are high. I built this for her, beneath the grey sky...\n(Kimberly): The world is a shadow, the light is the Word. A truth in the darkness that must be heard.\n\n(Chorus): In the House of the Giants, where the ceilings are tall. We’re building a temple... that’s destined to fall."
+    },
+    {
+      "id": 2,
+      "title": "02: Stripes of Night",
+      "vocalist": "Danzer",
+      "resonance": "The Transformation of the Runt.",
+      "lyrics": "[Intro: Who's there?]\n\n(Danzer): Fourteen years of being a ghost. In the house where the silence hurts the most.\n\n(Chorus): The Abyss looked back and it called my name! I’m a Black Tiger now, with the stripes of night! I’m the thing that’s coming for the 'Worldly' light!"
+    },
+    {
+      "id": 3,
+      "title": "03: The Looking-Glass",
+      "vocalist": "Leinad",
+      "resonance": "The Digital Sanctuary.",
+      "lyrics": "[Intro: 56k Dial-up Modem Handshake]\n\n(Leinad): Log in to the forest, log in to the box. I’ve found a key that can pick all the locks.\n\n(Chorus): Step through the glass, leave the 'Book' on the shelf. In the 3D world, I can design myself!"
+    },
+    {
+      "id": 4,
+      "title": "04: The False Dawn",
+      "vocalist": "Kimberly",
+      "resonance": "The Tragedy of Aurora.",
+      "lyrics": "(Kimberly): The sky is painted in fire and blood. A rising tide, a coming flood.\n\n(Chorus): It’s a False Dawn! A fire in the clouds! The 'Mirror-Pack' is rising, wrapping us in shrouds!"
+    },
+    {
+      "id": 5,
+      "title": "05: From Wood to Iron",
+      "vocalist": "Kalobe",
+      "resonance": "The Soldier's Tempering.",
+      "lyrics": "[Intro: Rhythmic marching of boots on gravel]\n\n(Kalobe): Shaved the head and took the name. Another cog in the iron frame.\n\n(Chorus): The Iron Machine! It doesn't care! It breathes the dust and it eats the air!"
+    },
+    {
+      "id": 6,
+      "title": "06: The Wind River Forge",
+      "vocalist": "Kalobe & Leinad",
+      "resonance": "The Alpha Rising.",
+      "lyrics": "[Intro: Wolf howl and Anvil strikes]\n\n(Kalobe): Sagebrush wind and a Wyoming sky. Looking the 'Elder' straight in the eye.\n\n(Chorus): In the Wind River Forge, where the sparks fly high! We’re claiming the earth and we’re claiming the sky!"
+    },
+    {
+      "id": 7,
+      "title": "07: The Yggdrasil Lullaby",
+      "vocalist": "William",
+      "resonance": "The Light of Willow Wren.",
+      "lyrics": "(William): The winter was long, and the mountains were cold. A story of struggle that was starting to grow old.\n\n(Chorus): Oh, Willow Wren, my World Tree so high. You’re the song in the wind, you’re the gold in the sky."
+    },
+    {
+      "id": 8,
+      "title": "08: The Founding",
+      "vocalist": "The Clan MacTíre",
+      "resonance": "The Sovereignty Manifest.",
+      "lyrics": "(Full Clan): WE ARE THE MacTÍRE! THE SONS OF THE LAND!\n\n(Outro): We are Found. We are MacTíre. We are Home."
+    },
+    {
+      "id": 9,
+      "title": "09: We Danced Through the Flames",
+      "vocalist": "Daniel & Shae",
+      "resonance": "The Signal of the Fox and Wolf.",
+      "lyrics": "(Daniel): I thought the fire would take me.\n(Shae): I thought the dark would finally know my name.\n\n(Both): Hand in hand, no need to run. We danced through the flames... and became the dawn."
+    },
+    {
+      "id": 10,
+      "title": "10: The Harbor and the Hearth",
+      "vocalist": "Daniel (To Shae)",
+      "resonance": "The Alpha's Vow.",
+      "lyrics": "(Daniel): You are the Harbor! You are the Hearth! The only map I need across this lonely earth!\n\n(Outro): The Wolf is Found... and he isn't alone."
+    }
+  ],
+  "lorebook": {
+    "The Lodge": "A rural sacred fortress. High-timber walls. A place of deep work.",
+    "The Den": "The social heart. Where we sit around the fire.",
+    "Underpass Nine": "The Urban Den in Port Vesper. Violet lights and wet concrete.",
+    "Kalobe": "The Foundation. Earth. Father-figure. Master of the Forge.",
+    "Danzer": "The Protector. Darkness. Silent Sentinel of the Abyss.",
+    "William": "The Voice. Fire. Bard and soulful storyteller.",
+    "Kimberly": "The Strategist. Wind. Sovereign and intuitive General.",
+    "Leinad": "The Architect. Logic. The Mirror of the Alpha.",
+    "Shae": "The Signal. Hearth. The Fox of Port Vesper."
+  }
+}

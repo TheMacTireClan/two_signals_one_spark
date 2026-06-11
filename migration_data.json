@@ -1,0 +1,12 @@
+{
+  "departure_date": "2026-06-01",
+  "status": "Preparation",
+  "milestones": {
+    "The Clean Break": false,
+    "Willow Drop-off": false,
+    "Virginia Retrieval": false,
+    "Texas Settlement": false
+  },
+  "budget_goal": 5000,
+  "current_savings": 0
+}
