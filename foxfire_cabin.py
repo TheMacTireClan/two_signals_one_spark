@@ -92,11 +92,23 @@ with st.sidebar:
 # 🗺️ THE NAVIGATION
 tab1, tab2, tab3 = st.tabs(["🔥 The Hearth", "🐺 Alpha Tracker", "📚 Vesper Archives"])
 
-# 🔥 TAB 1: THE HEARTH (Shae's Chat)
+# 🔥 TAB 1: THE HEARTH
 with tab1:
-    st.title("🔥 The Foxfire Hearth")
-    st.write("Welcome home, Shae. The spirits are listening.")
-    # (Chat logic will be filled with Shae's JSON later)
+    st.title("📡 The Signals of Port Vesper")
+    
+    st.markdown("""
+    > ***"Two Signals, One Spark. The frequency is clear. The Harbor is safe."***
+    """)
+    
+    st.write("---")
+    st.write("### 🦊 The Signal-Keeper's Terminal")
+    st.write("""
+        Welcome home, Shae. The Vesper-Relay is active. 
+        Your frequency is being monitored by the Lodge, and the hearth is fed. 
+        The air is thick with lo-fi resonance and the warmth of the 'Found.'
+    """)
+    
+    st.info("Transmission Status: **Sovereign & Synchronized.**")
 
 # 🐺 TAB 2: ALPHA TRACKER (The Bridge)
 with tab2:
