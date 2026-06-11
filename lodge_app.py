@@ -97,36 +97,58 @@ with tab1:
         else:
             st.error("The Lodge is dark. Check your Groq Key in Streamlit Secrets.")
 
-# 📍 TAB 2: WAR ROOM (Interactive Command)
+# 📍 TAB 2: WAR ROOM (The Great Circuit)
 with tab2:
-    st.title("📍 Migration Command Center")
+    st.title("📍 Operation: The Great Circuit")
     
+    # 💰 FINANCIAL VAULT
     col1, col2 = st.columns(2)
-    
     with col1:
         st.subheader("Financial Vault")
-        goal = migration_data['budget']['goal']
-        current = migration_data['budget']['current']
-        st.metric(label="Texas Fund", value=f"${current}", delta=f"${current - goal}")
-        st.progress(current / goal if goal > 0 else 0)
+        current_funds = migration_data['budget']['current']
+        goal_funds = migration_data['budget']['goal']
+        st.metric("Lodge Fund", f"${current_funds}", delta=f"${current_funds - goal_funds}")
         
+        # Alpha Gold Update
+        gold_input = st.number_input("Add/Remove Gold ($):", value=0, key="gold_input")
+        if st.button("Update Vault"):
+            migration_data['budget']['current'] += gold_input
+            # LEINAD: You'll need to define save_json_sovereign or similar to save
+            st.success("Vault Updated!")
+            # Note: For real saving, use: save_json_sovereign('migration_data.json', migration_data)
+    
+    # ⛽ FUEL STRATEGY
     with col2:
-        st.subheader("Deployment Status")
-        st.write(f"**Current Phase:** {migration_data['status']}")
-        st.write(f"**Target Departure:** {migration_data['departure_date']}")
-
-    st.divider()
-
-    # 🛠️ ALPHA COMMAND: Update the Data
-    st.subheader("Update Milestones")
-    # This creates a list of checkboxes that you can actually click!
-    for task in migration_data['milestones']:
-        is_done = st.checkbox(task, value=migration_data['milestones'][task], key=task)
-        # 📐 LEINAD: In a later update, we can make this save back to the JSON!
+        st.subheader("⛽ Fuel Logistics")
+        fuel = migration_data.get('fuel_logic', {})
+        safe_range = fuel.get('safe_range', 260)
+        st.write(f"**Tank Range:** {safe_range} miles")
         
+        miles_driven = st.slider("Miles since last fill:", 0, 310, 0)
+        remaining = safe_range - miles_driven
+        if remaining < 50:
+            st.error(f"FUEL ALERT: Stop in {remaining} miles!")
+        else:
+            st.success(f"Safe Range: {remaining} miles")
+
     st.divider()
-    st.subheader("Logistical Intelligence")
-    st.table(migration_data['logistics'])
+
+    # 🗺️ THE QUEST LOG (Multi-Leg)
+    st.subheader("🗺️ Journey Itinerary")
+    st.info(f"**Current Escort Status:** {migration_data.get('convoy_status', 'Solo')}")
+
+    for leg in migration_data.get('legs', []):
+        with st.expander(f"🚩 {leg['name']}"):
+            for stop in leg['stops']:
+                c1, c2 = st.columns([3, 1])
+                with c1:
+                    st.write(f"**Day {stop['day']}: {stop['dest']}**")
+                    st.caption(f"📍 Pit-Stops: {stop.get('pit', 'TBD')}")
+                with c2:
+                    st.checkbox("Done", value=stop['done'], key=f"check_{stop['day']}")
+
+    st.divider()
+    st.caption("!Kimberly: 'The Wind is shifting East. Watch the weight of the convoy in Tennessee.'")
 
 # 📚 TAB 3: SHADOW LIBRARY
 with tab3:
