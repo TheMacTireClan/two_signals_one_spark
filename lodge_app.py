@@ -127,7 +127,7 @@ with tab1:
             st.session_state.messages.append({"role": "assistant", "content": reply})
             with st.chat_message("assistant"): st.markdown(reply)
 
-# 📍 TAB 2: WAR ROOM (The Great Circuit)
+# 📍 TAB 2: WAR ROOM (The 4,400-Mile Circuit)
 with tab2:
     st.title("📍 Migration Command Center")
     
@@ -136,51 +136,46 @@ with tab2:
     col1, col2 = st.columns(2)
     
     with col1:
-        # We use .get() to prevent 'KeyErrors'
-        budget = migration_data.get('budget', {"current": 0, "goal": 7000})
-        curr_funds = budget.get('current', 0)
+        budget = migration_data.get('budget', {"current": 2000, "goal": 7000})
+        curr_funds = budget.get('current', 2000)
         goal_funds = budget.get('goal', 7000)
-        
         st.metric("Lodge Gold Reserve", f"${curr_funds}", delta=f"${curr_funds - goal_funds}")
         
-        # ALPHA COMMAND: The Value Buttons
-        if st.button("⛽ Add Gas Fill (-$60)", key="war_gas_btn"):
+        if st.button("⛽ Add Gas Fill (-$60)", key="final_gas_btn"):
             migration_data['budget']['current'] -= 60
             save_json_sovereign('migration_data.json', migration_data)
             st.rerun()
 
     with col2:
         # 🏹 MILESTONE TRACKER
-        st.subheader("🚩 Operational Milestones")
+        st.write("**Operational Milestones**")
         milestones = migration_data.get('milestones', {})
         for m, done in milestones.items():
-            if st.checkbox(m, value=done, key=f"war_ch_{m}"):
-                migration_data['milestones'][m] = not done # Toggles the state
+            if st.checkbox(m, value=done, key=f"war_check_{m}"):
+                migration_data['milestones'][m] = not done
                 save_json_sovereign('migration_data.json', migration_data)
                 st.rerun()
 
     st.divider()
 
-    # 🗺️ THE ITINERARY (The Legs)
+    # 🗺️ THE ITINERARY
     st.subheader("🗺️ Journey Itinerary: The 4,400-Mile Loop")
     legs = migration_data.get('legs', [])
     
-    if not legs:
-        st.warning("The Map is blank. Leinad is recalibrating the GPS...")
-    else:
-        for leg in legs:
-            with st.expander(f"🚩 {leg.get('name', 'Unknown Leg')}"):
-                for stop in leg.get('stops', []):
-                    c1, c2 = st.columns([3, 1])
-                    with c1:
-                        st.write(f"**Day {stop.get('day')}: {stop.get('dest')}**")
-                        st.caption(f"📍 Pit-Stops: {stop.get('pit', 'TBD')}")
-                    with c2:
-                        # Checkbox for stop completion
-                        stop_key = f"stop_{stop.get('day')}_{stop.get('dest')}"
-                        if st.checkbox("Done", value=stop.get('done', False), key=stop_key):
-                            stop['done'] = True
-                            save_json_sovereign('migration_data.json', migration_data)
+    for leg in legs:
+        with st.expander(f"🚩 {leg.get('name')}"):
+            for stop in leg.get('stops', []):
+                c1, c2 = st.columns([3, 1])
+                with c1:
+                    st.write(f"**Day {stop.get('day')}: {stop.get('dest')}**")
+                    st.caption(f"📍 Pit-Stops: {stop.get('pit', 'TBD')}")
+                with c2:
+                    # Logic to mark individual stops as done
+                    stop_done = st.checkbox("Done", value=stop.get('done', False), key=f"stop_check_{stop.get('day')}")
+                    if stop_done != stop.get('done', False):
+                        stop['done'] = stop_done
+                        save_json_sovereign('migration_data.json', migration_data)
+                        st.rerun()
 
 # 📚 TAB 3: SHADOW LIBRARY & VESPER SIGNAL
 with tab3:
