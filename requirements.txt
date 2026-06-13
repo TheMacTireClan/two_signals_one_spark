@@ -4,3 +4,4 @@ python-dotenv
 elevenlabs
 gspread
 oauth2client
+pathlib
