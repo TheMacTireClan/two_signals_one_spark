@@ -3,90 +3,42 @@
     "total_miles": 4421,
     "budget": {
         "goal": 7000,
-        "current": 1200
+        "current": 2000
     },
     "fuel_logic": {
         "avg_mpg": 19.5,
         "tank_size": 16,
         "safe_range": 260
     },
-    "convoy_status": "Leg 1: Alpha Prime (Solo)",
+    "milestones": {
+        "The Clean Break": false,
+        "Willow Drop-off": false,
+        "The Virginia Strike": false,
+        "Texas Settlement": false
+    },
     "legs": [
         {
             "name": "Leg 1: The Willow Drop-off (MT -> TX)",
             "stops": [
-                {
-                    "day": 1,
-                    "dest": "Salt Lake City, UT",
-                    "dist": 418,
-                    "pit": "Malad City, ID (Fuel/Rest)",
-                    "done": false
-                },
-                {
-                    "day": 2,
-                    "dest": "Albuquerque, NM",
-                    "dist": 597,
-                    "pit": "Moab, UT (Fuel) & Shiprock, NM (Rest)",
-                    "done": false
-                },
-                {
-                    "day": 3,
-                    "dest": "Dickens, TX",
-                    "dist": 381,
-                    "pit": "Clovis, NM (Final NM Fuel)",
-                    "done": false
-                }
+                {"day": 1, "dest": "Salt Lake City, UT", "pit": "Malad City, ID", "done": false},
+                {"day": 2, "dest": "Albuquerque, NM", "pit": "Shiprock, NM", "done": false},
+                {"day": 3, "dest": "Dickens, TX", "pit": "Clovis, NM", "done": false}
             ]
         },
         {
-            "name": "Leg 2: The Virginia Strike (TX -> VA - ESCORT)",
+            "name": "Leg 2: The Virginia Strike (TX -> VA)",
             "stops": [
-                {
-                    "day": 4,
-                    "dest": "Memphis, TN",
-                    "dist": 689,
-                    "pit": "Oklahoma City (Fuel) & Little Rock (Rest)",
-                    "done": false
-                },
-                {
-                    "day": 5,
-                    "dest": "Greensboro, NC",
-                    "obj": "Nashville, TN (Fuel) & Knoxville, TN (Rest)",
-                    "done": false
-                },
-                {
-                    "day": 6,
-                    "dest": "Carrollton, VA",
-                    "dist": 228,
-                    "pit": "Petersburg, VA (Final Approach)",
-                    "done": false
-                }
+                {"day": 4, "dest": "Memphis, TN", "pit": "Oklahoma City", "done": false},
+                {"day": 5, "dest": "Greensboro, NC", "pit": "Nashville, TN", "done": false},
+                {"day": 6, "dest": "Carrollton, VA", "pit": "Petersburg, VA", "done": false}
             ]
         },
         {
-            "name": "Leg 3: The Homecoming (VA -> TX - CO-PILOT)",
+            "name": "Leg 3: The Homecoming (VA -> TX)",
             "stops": [
-                {
-                    "day": 7,
-                    "dest": "Greensboro, NC",
-                    "dist": 228,
-                    "pit": "South Hill, VA (Fuel)",
-                    "done": false
-                },
-                {
-                    "day": 8,
-                    "dest": "Memphis, TN",
-                    "dist": 671,
-                    "pit": "Asheville, NC (Fuel) & Jackson, TN (Rest)",
-                    "done": false
-                },
-                {
-                    "day": 9,
-                    "dest": "Lubbock, TX",
-                    "dist": 750,
-                    "pit": "Texarkana (Fuel) & Dallas (Rest/Co-Pilot Shift)",
-                    "done": false
-                }
+                {"day": 7, "dest": "Greensboro, NC", "pit": "South Hill, VA", "done": false},
+                {"day": 8, "dest": "Memphis, TN", "pit": "Asheville, NC", "done": false},
+                {"day": 9, "dest": "Lubbock, TX", "pit": "Dallas, TX", "done": false}
             ]
         }
     ]

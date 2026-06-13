@@ -14,7 +14,7 @@ os.environ["PYTHONUTF8"] = "1"
 load_dotenv()
 
 # ==========================================
-# 📐 DATA CONTROLLER (JSON & GOOGLE SHEETS)
+# 📐 DATA CONTROLLERS
 # ==========================================
 
 def load_json_sovereign(filename, default_value):
@@ -32,12 +32,10 @@ def save_json_sovereign(filename, data):
         content = json.dumps(data, indent=4)
         path.write_text(content, encoding='utf-8')
         return True
-    except Exception as e:
-        st.error(f"Save Failure: {e}")
-        return False
+    except Exception: return False
 
+# Google Ledger Handshake
 SERVICE_ACCOUNT_FILE = "service_account.json" 
-
 GOOGLE_SHEET_NAME = "Two_Signals_One_Spark_Ledger"
 
 def sync_to_ledger(origin, phase, vault, message="", milestone=""):
@@ -49,9 +47,7 @@ def sync_to_ledger(origin, phase, vault, message="", milestone=""):
         new_row = [datetime.now().strftime("%Y-%m-%d %H:%M:%S"), origin, phase, str(vault), message, milestone]
         sheet.append_row(new_row)
         return True
-    except Exception as e:
-        st.error(f"Ledger Sync Failed: {e}")
-        return False
+    except Exception: return False
 
 def get_ledger_signals():
     try:
@@ -60,11 +56,11 @@ def get_ledger_signals():
         client_gs = gspread.authorize(creds)
         sheet = client_gs.open(GOOGLE_SHEET_NAME).sheet1
         all_records = sheet.get_all_records()
-        return [r for r in all_records if r['Origin'] == 'Fox'][-5:]
+        return [r for r in all_records if str(r.get('Origin','')).strip().lower() == 'fox'][-5:]
     except Exception: return []
 
 # ==========================================
-# 🛰️ BRAIN SELECTOR (4060 OR GROQ)
+# 🛰️ BRAIN SELECTOR (HYBRID)
 # ==========================================
 
 def initialize_client():
@@ -73,28 +69,39 @@ def initialize_client():
         local_client.models.list() 
         return local_client, "local-model", "🔗 Sovereign Iron (4060)"
     except Exception:
-        groq_key = st.secrets.get("GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
+        groq_key = None
+        try:
+            if hasattr(st, "secrets") and "GROQ_API_KEY" in st.secrets: groq_key = st.secrets["GROQ_API_KEY"]
+        except Exception: pass
+        if not groq_key: groq_key = os.getenv("GROQ_API_KEY")
         if groq_key:
-            groq_client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=groq_key)
-            return groq_client, "llama-3.3-70b-versatile", "⚡ Groq Satellite (Cloud)"
+            return OpenAI(base_url="https://api.groq.com/openai/v1", api_key=groq_key), "llama-3.3-70b-versatile", "⚡ Groq Satellite (Cloud)"
         return None, None, "❌ Offline"
 
 client, model_id, brain_status = initialize_client()
 
 # ==========================================
-# 🎨 INTERFACE & NAVIGATION
+# 🎨 INTERFACE & THEMES
 # ==========================================
 
 st.set_page_config(page_title="MacTíre Lodge", page_icon="🐺", layout="wide")
-st.markdown("<style>.stApp { background-color: #0c0e12; color: #e0e0e0; } h1,h2,h3 { color: #bb86fc; text-shadow: 0 0 10px #bb86fc; }</style>", unsafe_allow_html=True)
+st.markdown("""
+    <style>
+    .stApp { background-color: #0c0e12; color: #e0e0e0; }
+    [data-testid="stSidebar"] { background-color: #1a1c23; border-right: 2px solid #bb86fc; }
+    h1,h2,h3 { color: #bb86fc; text-shadow: 0 0 10px #bb86fc; }
+    .stChatMessage { background-color: #1a1c23; border-radius: 10px; border: 1px solid #3d3f4e; margin-bottom: 10px; }
+    </style>
+    """, unsafe_allow_html=True)
 
-migration_data = load_json_sovereign('migration_data.json', {"status": "Prep", "milestones": {}, "budget": {"current": 0, "goal": 7000}})
+# Loading Data
+migration_data = load_json_sovereign('migration_data.json', {"status": "Prep", "milestones": {}, "budget": {"current": 0, "goal": 7000}, "legs": []})
 archive = load_json_sovereign('archive_data.json', {"tracks": [], "lorebook": {}})
 
 with st.sidebar:
     st.header("📍 Migration Command")
     st.caption(f"Status: {brain_status}")
-    st.write(f"**Phase:** {migration_data.get('status', 'Unknown')}")
+    st.metric("Lodge Fund", f"${migration_data['budget']['current']}")
     st.divider()
     st.info("!Kimberly is monitoring the Wind.")
 
@@ -104,47 +111,76 @@ tab1, tab2, tab3 = st.tabs(["🐺 The Den", "📍 War Room", "📚 Shadow Librar
 with tab1:
     st.title("🏛️ The Central Hearth")
     if "messages" not in st.session_state:
-        st.session_state.messages = [{"role": "system", "content": "You are the Clan MacTíre. Daniel is the Alpha."}]
+        SOUL = "You are the Clan MacTíre. Daniel is the Alpha. ALWAYS use *asterisks* for actions and **Bold Names** for speaking. No corporate talk. Grit, stone, and loyalty only."
+        st.session_state.messages = [{"role": "system", "content": SOUL}]
     
     for msg in st.session_state.messages:
         if msg["role"] != "system":
             with st.chat_message(msg["role"]): st.markdown(msg["content"])
 
     if prompt := st.chat_input("Command, Alpha?"):
-        # Voice Trigger logic (Optional)
-        for name in ["Kalobe", "Danzer", "William", "Kimberly", "Leinad"]:
-            if f"!{name.lower()}" in prompt.lower():
-                v_path = f"voices/{name.lower()}_voice.wav"
-                if os.path.exists(v_path): st.audio(v_path, autoplay=True)
-
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"): st.markdown(prompt)
-        
         if client:
             resp = client.chat.completions.create(model=model_id, messages=st.session_state.messages)
             reply = resp.choices[0].message.content
             st.session_state.messages.append({"role": "assistant", "content": reply})
             with st.chat_message("assistant"): st.markdown(reply)
 
-# 📍 TAB 2: WAR ROOM
+# 📍 TAB 2: WAR ROOM (The Great Circuit)
 with tab2:
     st.title("📍 Migration Command Center")
+    
+    # 💰 FINANCIAL VAULT
+    st.subheader("Financial Resource Management")
     col1, col2 = st.columns(2)
+    
     with col1:
-        curr = migration_data['budget']['current']
-        goal = migration_data['budget']['goal']
-        st.metric("Vault Balance", f"${curr}", delta=f"${curr - goal}")
-        if st.button("⛽ Add Gas Fill (-$60)", key="gas_btn"):
+        # We use .get() to prevent 'KeyErrors'
+        budget = migration_data.get('budget', {"current": 0, "goal": 7000})
+        curr_funds = budget.get('current', 0)
+        goal_funds = budget.get('goal', 7000)
+        
+        st.metric("Lodge Gold Reserve", f"${curr_funds}", delta=f"${curr_funds - goal_funds}")
+        
+        # ALPHA COMMAND: The Value Buttons
+        if st.button("⛽ Add Gas Fill (-$60)", key="war_gas_btn"):
             migration_data['budget']['current'] -= 60
             save_json_sovereign('migration_data.json', migration_data)
             st.rerun()
-    
+
     with col2:
-        st.subheader("🚩 Milestones")
-        for m, done in migration_data['milestones'].items():
-            if st.checkbox(m, value=done, key=f"check_{m}"):
-                migration_data['milestones'][m] = True
+        # 🏹 MILESTONE TRACKER
+        st.subheader("🚩 Operational Milestones")
+        milestones = migration_data.get('milestones', {})
+        for m, done in milestones.items():
+            if st.checkbox(m, value=done, key=f"war_ch_{m}"):
+                migration_data['milestones'][m] = not done # Toggles the state
                 save_json_sovereign('migration_data.json', migration_data)
+                st.rerun()
+
+    st.divider()
+
+    # 🗺️ THE ITINERARY (The Legs)
+    st.subheader("🗺️ Journey Itinerary: The 4,400-Mile Loop")
+    legs = migration_data.get('legs', [])
+    
+    if not legs:
+        st.warning("The Map is blank. Leinad is recalibrating the GPS...")
+    else:
+        for leg in legs:
+            with st.expander(f"🚩 {leg.get('name', 'Unknown Leg')}"):
+                for stop in leg.get('stops', []):
+                    c1, c2 = st.columns([3, 1])
+                    with c1:
+                        st.write(f"**Day {stop.get('day')}: {stop.get('dest')}**")
+                        st.caption(f"📍 Pit-Stops: {stop.get('pit', 'TBD')}")
+                    with c2:
+                        # Checkbox for stop completion
+                        stop_key = f"stop_{stop.get('day')}_{stop.get('dest')}"
+                        if st.checkbox("Done", value=stop.get('done', False), key=stop_key):
+                            stop['done'] = True
+                            save_json_sovereign('migration_data.json', migration_data)
 
 # 📚 TAB 3: SHADOW LIBRARY & VESPER SIGNAL
 with tab3:
@@ -152,23 +188,19 @@ with tab3:
     with col_lib:
         st.header("📚 Shadow Library")
         if archive['tracks']:
-            titles = [t['title'] for t in archive['tracks']]
-            choice = st.selectbox("Select Scroll:", titles)
+            choice = st.selectbox("Select Scroll:", [t['title'] for t in archive['tracks']])
             track = next(t for t in archive['tracks'] if t['title'] == choice)
             st.markdown(f"### {track['title']}")
-            st.text_area("Vellum", value=track['lyrics'], height=200, disabled=True)
+            st.text_area("Vellum", value=track['lyrics'], height=300, disabled=True)
 
     with col_vesp:
         st.header("🦊 Vesper Signal")
-        st.caption("Two Signals, One Spark")
-        msg = st.text_input("Signal to Cabin:", key="vesp_input")
-        if st.button("Ignite the Spark", key="ignite_btn"):
-            if sync_to_ledger("Alpha", migration_data['status'], migration_data['budget']['current'], msg):
-                st.success("Signal Sent to Ledger!")
+        msg = st.text_input("Signal to Cabin:", key="v_in")
+        if st.button("Ignite the Spark", key="v_ignite"):
+            sync_to_ledger("Alpha", migration_data['status'], migration_data['budget']['current'], msg)
+            st.success("Signal Sent!")
         
         st.divider()
         st.write("### 🦊 Foxfire Feed")
-        fox_pulses = get_ledger_signals()
-        if not fox_pulses: st.info("Waiting for the Fox...")
-        for p in reversed(fox_pulses):
-            st.markdown(f"**{p['Timestamp']}**: {p['Message']}")
+        for p in reversed(get_ledger_signals()):
+            st.markdown(f"**{p.get('Timestamp')}**: {p.get('Message')}")
