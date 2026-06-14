@@ -27,40 +27,53 @@ load_dotenv()
 SERVICE_ACCOUNT_FILE = "service_account.json" 
 GOOGLE_SHEET_NAME = "Two_Signals_One_Spark_Ledger"
 
+# ==========================================
+# 🛰️ CLOUD LEDGER CONTROLLERS (The Bridge)
+# ==========================================
+
+# 📐 LEINAD: This is the New Gatekeeper you were looking for!
+def get_gspread_client():
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    try:
+        # 🛡️ SHIELD 1: Check Streamlit Secrets (Satellite/Phone)
+        if "google_credentials" in st.secrets:
+            creds_dict = dict(st.secrets["google_credentials"])
+            # Fix newline characters for Google's RSA format
+            if "private_key" in creds_dict:
+                creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+            creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+            return gspread.authorize(creds)
+        
+        # 🧱 SHIELD 2: Check Local File (The Tower)
+        elif os.path.exists("service_account.json"):
+            creds = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scope)
+            return gspread.authorize(creds)
+    except Exception as e:
+        st.sidebar.error(f"Gatekeeper Error: {e}")
+    return None
+
 def sync_to_ledger(origin, phase, vault, message="", milestone=""):
     try:
-        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-        creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
-        client_gs = gspread.authorize(creds)
-        sheet = client_gs.open(GOOGLE_SHEET_NAME).sheet1
+        client_gs = get_gspread_client() # Calling the new Gatekeeper
+        if not client_gs: return False
+        sheet = client_gs.open("Two_Signals_One_Spark_Ledger").sheet1
         new_row = [datetime.now().strftime("%Y-%m-%d %H:%M:%S"), origin, phase, str(vault), message, milestone]
         sheet.append_row(new_row)
         return True
     except Exception as e:
-        st.sidebar.error(f"Ledger Send Fail: {e}")
+        st.sidebar.error(f"Ledger Sync Failed: {e}")
         return False
 
 def get_ledger_signals():
     try:
-        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-        # This reaches for the 'Key' on your desk
-        creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
-        client_gs = gspread.authorize(creds)
-        
-        # This opens the Shared Vellum
-        sheet = client_gs.open(GOOGLE_SHEET_NAME).sheet1
+        client_gs = get_gspread_client() # Calling the new Gatekeeper
+        if not client_gs: return []
+        sheet = client_gs.open("Two_Signals_One_Spark_Ledger").sheet1
         all_records = sheet.get_all_records()
-        
-        # This filters for the Fox's frequency
-        fox_signals = []
-        for r in all_records:
-            if str(r.get('Origin', '')).strip().lower() == 'fox':
-                fox_signals.append(r)
-        
-        return fox_signals[-5:] # Latest 5 pulses
-    except Exception as e:
-        # If we can't reach the sheet, we stay quiet but notify the Alpha
-        return []
+        # Filter for the Fox's Frequency
+        fox_signals = [r for r in all_records if str(r.get('Origin','')).strip().lower() == 'fox']
+        return fox_signals[-5:]
+    except Exception: return []
 def load_json_sovereign(filename, default_value):
     try:
         path = pathlib.Path(filename)
