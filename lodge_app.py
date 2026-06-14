@@ -189,27 +189,66 @@ with tab2:
                     save_json_sovereign('migration_data.json', migration_data)
                     st.rerun()
 
-# 📚 TAB 3: SHADOW LIBRARY
+# 📚 TAB 3: SHADOW LIBRARY & VESPER SIGNAL
 with tab3:
     col_lib, col_vesp = st.columns([2, 1])
+    
+    # --- 🎼 LEFT COLUMN: THE SHADOW LIBRARY ---
     with col_lib:
         st.header("📚 Shadow Library")
-        if archive['tracks']:
-            choice = st.selectbox("Select Scroll:", [t['title'] for t in archive['tracks']])
-            track = next(t for t in archive['tracks'] if t['title'] == choice)
-            st.markdown(f"### {track['title']}")
-            base_path = pathlib.Path(__file__).parent.absolute()
-            true_audio = base_path / track.get('audio_file', "")
-            if true_audio.exists(): st.audio(str(true_audio), format="audio/mp3")
-            st.text_area("Vellum", value=track.get('lyrics'), height=400, disabled=True)
+        
+        if archive and 'tracks' in archive and archive['tracks']:
+            # 1. Selection Logic (THE MISSING STEP)
+            track_list = [t['title'] for t in archive['tracks']]
+            selected_title = st.selectbox("📜 Manifest a Scroll:", track_list, key="lib_selector")
+            track_data = next((t for t in archive['tracks'] if t['title'] == selected_title), None)
+            
+            if track_data:
+                st.markdown(f"### {track_data['title']}")
+                
+                # --- Sovereign Audio Player ---
+                raw_audio = track_data.get('audio_file', "")
+                if raw_audio:
+                    # 📐 LEINAD: Absolute Pathing for the Satellite
+                    base_path = pathlib.Path(__file__).parent.absolute()
+                    true_audio = base_path / raw_audio
+                    
+                    if true_audio.exists():
+                        # We read as bytes to force the Mobile Player to wake up
+                        with open(true_audio, "rb") as f:
+                            audio_bytes = f.read()
+                        st.audio(audio_bytes, format="audio/mp3")
+                    else:
+                        st.warning(f"Searching for Iron: {raw_audio}")
+                
+                # Full Lyrics Display
+                st.text_area(
+                    label="Lyrical Marrow",
+                    value=track_data.get('lyrics', ""),
+                    height=450,
+                    disabled=True
+                )
+        else:
+            st.error("Library Index missing. Check archive_data.json.")
 
+    # --- 🦊 RIGHT COLUMN: VESPER SIGNAL ---
     with col_vesp:
         st.header("🦊 Vesper Signal")
         st.write("> *Two Signals, One Spark.*")
-        msg = st.text_input("Signal to Cabin:", key="v_msg")
+        
+        msg = st.text_input("Signal to Cabin:", placeholder="Transmission...", key="v_msg")
         if st.button("Ignite the Spark", key="v_ignite"):
-            if sync_to_ledger("Alpha", migration_data['status'], migration_data['budget']['current'], msg):
-                st.success("Signal Sent!")
+            # 📐 LEINAD: Calling the sync logic
+            if sync_to_ledger("Alpha", migration_data.get('status', 'Transit'), migration_data['budget']['current'], msg):
+                st.success("Signal Sent to Ledger!")
+                st.balloons() # Visual confirmation for the Alpha
+            else:
+                st.error("Signal Failed. Check Gatekeeper.")
+
         st.divider()
-        for p in reversed(get_ledger_signals()):
+        st.write("### 📡 Foxfire Feed")
+        pulses = get_ledger_signals()
+        if not pulses:
+            st.info("Waiting for the Fox...")
+        for p in reversed(pulses):
             st.markdown(f"**{p.get('Timestamp')}**: {p.get('Message')}")
