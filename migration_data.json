@@ -1,6 +1,7 @@
 {
-    "status": "Convoy Readiness",
+    "status": "Operational Readiness",
     "total_miles": 4421,
+    "current_odometer": 218507,
     "budget": {
         "goal": 7000,
         "current": 2000
@@ -10,6 +11,7 @@
         "tank_size": 16,
         "safe_range": 260
     },
+    "fuel_logs": [],
     "milestones": {
         "The Clean Break": false,
         "Willow Drop-off": false,
@@ -20,25 +22,25 @@
         {
             "name": "Leg 1: The Willow Drop-off (MT -> TX)",
             "stops": [
-                {"day": 1, "dest": "Salt Lake City, UT", "pit": "Malad City, ID", "done": false},
-                {"day": 2, "dest": "Albuquerque, NM", "pit": "Shiprock, NM", "done": false},
-                {"day": 3, "dest": "Dickens, TX", "pit": "Clovis, NM", "done": false}
+                {"day": 1, "dest": "Salt Lake City, UT", "lat": 40.76, "lon": -111.89, "pit": "Malad City, ID", "done": false},
+                {"day": 2, "dest": "Albuquerque, NM", "lat": 35.08, "lon": -106.65, "pit": "Shiprock, NM", "done": false},
+                {"day": 3, "dest": "Dickens, TX", "lat": 33.62, "lon": -100.83, "pit": "Clovis, NM", "done": false}
             ]
         },
         {
             "name": "Leg 2: The Virginia Strike (TX -> VA)",
             "stops": [
-                {"day": 4, "dest": "Memphis, TN", "pit": "Oklahoma City", "done": false},
-                {"day": 5, "dest": "Greensboro, NC", "pit": "Nashville, TN", "done": false},
-                {"day": 6, "dest": "Carrollton, VA", "pit": "Petersburg, VA", "done": false}
+                {"day": 4, "dest": "Memphis, TN", "lat": 35.15, "lon": -90.05, "pit": "Oklahoma City, OK", "done": false},
+                {"day": 5, "dest": "Greensboro, NC", "lat": 36.07, "lon": -79.79, "pit": "Nashville, TN", "done": false},
+                {"day": 6, "dest": "Carrollton, VA", "lat": 36.94, "lon": -76.55, "pit": "Petersburg, VA", "done": false}
             ]
         },
         {
             "name": "Leg 3: The Homecoming (VA -> TX)",
             "stops": [
-                {"day": 7, "dest": "Greensboro, NC", "pit": "South Hill, VA", "done": false},
-                {"day": 8, "dest": "Memphis, TN", "pit": "Asheville, NC", "done": false},
-                {"day": 9, "dest": "Lubbock, TX", "pit": "Dallas, TX", "done": false}
+                {"day": 7, "dest": "Greensboro, NC", "lat": 36.07, "lon": -79.79, "pit": "South Hill, VA", "done": false},
+                {"day": 8, "dest": "Memphis, TN", "lat": 35.15, "lon": -90.05, "pit": "Asheville, NC", "done": false},
+                {"day": 9, "dest": "Lubbock, TX", "lat": 33.58, "lon": -101.85, "pit": "Dallas, TX", "done": false}
             ]
         }
     ]

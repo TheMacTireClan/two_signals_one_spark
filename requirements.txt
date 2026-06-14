@@ -5,3 +5,5 @@ elevenlabs
 gspread
 oauth2client
 pathlib
+folium
+streamlit-folium
